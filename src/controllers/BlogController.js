@@ -134,13 +134,13 @@ const deleteByQuery = async function(req, res)
         {
             res.status(400).send({status: false, msg: "Category Required" })
         }
-        const authorDetails = await authorModel.find({ _id: authorId })
+        const authorDetails = await AuthorModel.find({ _id: authorId })
         if (!authorDetails) 
         {
             res.status(404).send({status: false, msg: "AuthorId Not Exist" })
         } 
        
-        const updateDetails = await blogsModel.updateMany({ authorId: authorId, category: category }, { $set: { isDeleted: true } })
+        const updateDetails = await BlogModel.updateMany({ authorId: authorId,     category: category }, { $set: { isDeleted: true } })
         updateDetails.deletedAt = Date()
         res.status(201).send({status: true, data: updateDetails })
     }
