@@ -1,36 +1,30 @@
-const mongoose = require('mongoose');
-const validator =require("validator");
+const mongoose = require("mongoose")
+const { default: isEmail } = require("validator/lib/isEmail")
 
 
-const authorSchema = new mongoose.Schema(
-{
-    fname: {
-        type: String,
-        required: true
-    },
-    lname: {
+const authorSchema = new mongoose.Schema({
+    firstname:{
         type:String,
-        required: true
+        required:true
     },
-    title: {
-            type: String,
-            required: true,
-            enum: ["Mr", "Mrs", "Miss"]
+    lastname:{
+        type:String,
+        required:true
     },
-    email: {
-         type: String,
-         required: true,
-         unique:true,
-         validator:function(email)
-        { 
-            return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)
-        },
-        password:{
-            type: String,
-            required: true
-        }
+    title:{
+        type:String,
+        enum:["Mr","Mrs","Miss"]
+    },
+    email:{
+        type:String,
+        unique:true,
+        validate:[isEmail,'invalid email']
+        
+    },
+    password:{
+        type:String,
+        required:true
     }
-
 },{timestamps:true})
 
-module.exports = mongoose.model('Createauthor', authorSchema) 
+module.exports = mongoose.model("authors", authorSchema)

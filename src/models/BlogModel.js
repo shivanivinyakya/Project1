@@ -1,47 +1,40 @@
-const mongoose = require('mongoose');
-const validator = require("validator");
-const { createAuthor } = require('../controllers/AuthorController');
-// const AuthorId = mongoose.Schema.Types.AuthorId
 
-const BlogSchema = new mongoose.Schema(
-    {
-        title: {
-            type: String,
-            required: true
-        },
-        body: {
-            type: String,
-            required: true
-        },  
-        AuthorId: {
-            type: mongoose.Types.ObjectId,
-            // required: true,
-            ref: "CreateAuthor"
-        },
-        tags: [String],
+const mongoose = require("mongoose")
+const ObjectId = mongoose.Schema.Types.ObjectId;
 
-        category: {
-            type: String,
-            required: true
-        },
-        subcategory: [String],
+const blogSchema = new mongoose.Schema({
+    title:{
+        type:String,
+        required:true
+    },
+    body:{
+        type:String,
+        required:true
+    },
+    authorId :{
+        required:true,
+        type:ObjectId,
+        ref:"authors"
+    },
+    tags:{
+        type:[String]
+    },
+    category:String,
+    subcategory:{
+        type:[String]
+    },
+    isPublished:{
+        type:Boolean,
+        default:false,
+    },
+    publishedAt:Date,
 
-        isPublished: {
-            type: Boolean
-        },
-        isPublishedAt: {
-            type: Date
-        },
-        isDeleted: {
-            type: Boolean,
-            default: false
-        },
-        isDletedAt: {
-            type: Date
-        },
-        isUpdatedAt: {
-            type: Date
-        },
-    },{ timestamps: true })
+    isDeleted:{
+        type:Boolean,
+        default:false
+    },
+    deletedAt:Date,
+},{timestamps:true})
 
-module.exports= mongoose.model('Blog', BlogSchema)
+
+module.exports = mongoose.model("Blogs", blogSchema)    

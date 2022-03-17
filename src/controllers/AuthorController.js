@@ -1,32 +1,40 @@
+const jwt = require("jsonwebtoken");
+const AuthorModel = require("../models/AuthorModel")
+const AlogsModel = require("../models/BlogModel");
 
-// const authorModel= require("../model/AuthorModel");
-const { status } = require("express/lib/response");
-const { restart } = require("nodemon");
-const AuthorModel = require("../models/AuthorModel");
-
-const createAuthor= async function(req, res){
-    try{
-        const data=req.body;
-        let email = req.body.email;
-        if(!data) {
-            // res.send("Author info is needed...!!")
-            // console.log("Author info is needed...!!")
-           return res.status(400).send({status: false, message: 'Invalid request parameters. Please provide author details'})
-        }
-        if(!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)))
-        
-            return status(406).send({status: false, message: "Invalid EmailId..!!"})
-        
-        const Author= await AuthorModel.create(data);
-        res.send(Author);
+//part1
+const createAuthor = async function (req, res) {
+    try {
+        let data = req.body;
+        let savedata = await AuthorModel.create(data);
+        res.status(201).send({ status: true, msg: savedata })
     }
-    catch(err)
-    {
-        res.send(err);
-        console.log(err);
-        res.status(500).send({status: false, message: err.message});
+    catch (err) {
+        res.status(500).send({ status: false, msg: err.message })
     }
 }
 
 
-module.exports.createAuthor= createAuthor
+const loginUser = async function (req, res) {
+    try{
+    let userName = req.body.emailId;
+    let password = req.body.password;
+    let author= await AuthorModel.findOne({ emailId: userName, password: password });
+    if (!author)
+      return res.send({
+        status: false,
+        msg: "username or the password is not corerct",
+      });
+      let token = jwt.sign({ authorId: author._id.toString() }, "Blog");
+
+      res.status(201).send({ status: true, msg: "Succesfully LogedIn.Here is a access Token", token: token })
+    }
+    
+    catch(error){
+        console.log(error)
+        res.status(500).send({ msg: error.message })
+    }
+  }
+
+module.exports.createAuthor = createAuthor;
+module.exports.loginUser=loginUser;

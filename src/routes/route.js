@@ -1,27 +1,23 @@
+
 const express = require('express');
 const router = express.Router();
+const AuthorController = require("../controllers/AuthorController")
+const BlogController = require("../controllers/BlogController")
+const Middleware = require("../Middleware/auth")
+const Middlewares=require("../Middleware/auth")
 
-const AuthorController= require("../controllers/AuthorController")
-const BlogController= require("../controllers/BlogController")
+router.post("/authors", AuthorController.createAuthor);
 
+router.post("/blogs", BlogController.createBlog);
 
-router.get("/test-me", function (req, res) {
-    res.send("Rishabh...!!")
-})
+router.get("/getblogs",  BlogController.getBlogs);
 
+router.put("/updateBlogs/:blogId",Middleware.auth1,  BlogController.updateBlogs)
 
-// product route
-router.post("/CreateAuthor", AuthorController.createAuthor)
+router.delete("/deleteBlogs/:blogId",Middlewares.auth1,  BlogController.deleteBlogs)
 
-router.post("/Blogs", BlogController.createBlog)
+router.delete("/deleteByAddress",  BlogController.deleteByAddress);
 
-router.get("/getBlogs", BlogController.getDetails)
-
-router.put("/UpdateBlogs/:blogId", BlogController.isModified)
-
-router.delete("/blogs/:blogId", BlogController.isDelete)
-
-router.delete("/Deleted", BlogController.deleteByQuery)
-
+router.post("/login", AuthorController.loginUser)
 
 module.exports = router;
